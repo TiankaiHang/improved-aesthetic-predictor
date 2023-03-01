@@ -102,7 +102,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model2, preprocess = clip.load("ViT-L/14", device=device)  #RN50x64   
 
 
-image_files = glob.glob(f"/data/home/tiankai/code_base/guided-diffusion-new/exp/guided_diffusion/dec21_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__min_snr_5__fp16_bs8x32/1000000_samples1000_edm_20_scale2.0/*.png")
+image_files = glob.glob(f"/data/home/tiankai/datasets/guided-diffusion-new/exp/guided_diffusion/dec21_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__min_snr_5__fp16_bs8x32/1000000_samples1000_edm_20_scale2.0/*.png")
 
 predicted_scores = []
 for img_path in tqdm(image_files):
@@ -132,10 +132,12 @@ for idx in inds[:100]:
     base_file_name = os.path.basename(image_files[idx])
 
     # combine the images to a single one
-    iters = [200000, 400000, 600000, 800000, 1000000]
+    # iters = [200000, 400000, 600000, 800000, 1000000]
+    iters = [50000, 200000, 400000, 1000000]
     exps = [
-        "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__snr__fp16_bs8x32",
-        "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__trunc_snr__fp16_bs8x32",
+        # "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__snr__fp16_bs8x32",
+        # "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__trunc_snr__fp16_bs8x32",
+        "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_noise__const__fp16_bs8x32",
         "jan20_abl_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__const__fp16_bs8x32",
         "dec21_ldm32_beit_base_layer12_lr1e-4_099_099_img64_pred_x0__min_snr_5__fp16_bs8x32",
     ]
@@ -150,8 +152,8 @@ for idx in inds[:100]:
             exp = exps[i]
             iter = iters[j]
             img = cv2.imread(
-                f"/data/home/tiankai/code_base/guided-diffusion-new/exp/guided_diffusion/"
-                f"{exp}/{iter}_samples1000_edm_20_scale2.0/{base_file_name}",
+                f"/data/home/tiankai/datasets/guided-diffusion-new/exp/guided_diffusion/"
+                f"{exp}/{iter:06d}_samples1000_edm_20_scale2.0/{base_file_name}",
             )
             combined_image[
                 i*margin+i*img_size : i*margin+(i+1)*img_size,
